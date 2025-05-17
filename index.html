@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alphabet Pronunciation Checker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div class="constant">
+        <h1>🎤 Pronunciation Checker</h1>
+        <div>Click on a word, then try to pronounce it!</div>
+    
+        <div id="word">Click a word below 👇</div>
+        <button onclick="startListening()">🎤 Speak</button>
+        <button onclick="stopListening()">🛑 Stop Listening</button>
+    
+        <div id="result"></div>
+    </div>
+
+
+    <div class="letter-section" id="wordListContainer"></div>
+
+
+    <script>
+        const wordMap = {
+            A: ['apple', 'arrow', 'animal'],
+            B: ['banana', 'bottle', 'button'],
+            C: ['cat', 'circle', 'cookie'],
+            D: ['dog', 'drum', 'dance'],
+            E: ['elephant', 'egg', 'engine'],
+            F: ['fish', 'flag', 'fruit'],
+            G: ['goat', 'guitar', 'grape'],
+            H: ['hat', 'house', 'hammer'],
+            I: ['ice', 'insect', 'idea'],
+            J: ['juice', 'jungle', 'jacket'],
+            K: ['kite', 'kangaroo', 'key'],
+            L: ['lion', 'lamp', 'leaf'],
+            M: ['monkey', 'moon', 'milk'],
+            N: ['nose', 'nurse', 'net'],
+            O: ['orange', 'owl', 'octopus'],
+            P: ['pencil', 'pizza', 'penguin'],
+            Q: ['queen', 'question', 'quilt'],
+            R: ['rabbit', 'rain', 'robot'],
+            S: ['sun', 'snake', 'star'],
+            T: ['tiger', 'table', 'train'],
+            U: ['umbrella', 'unicorn', 'uniform'],
+            V: ['violin', 'vase', 'van'],
+            W: ['whale', 'window', 'water'],
+            X: ['x-ray', 'xenon', 'xylophone'],
+            Y: ['yarn', 'yogurt', 'yellow'],
+            Z: ['zebra', 'zipper', 'zoo']
+        };
+        
+        let targetWord = "";
+        const wordDiv = document.getElementById("word");
+        const resultDiv = document.getElementById("result");
+        const container = document.getElementById("wordListContainer");
+        
+        for (const [letter, words] of Object.entries(wordMap)) {
+            const section = document.createElement('div');
+            section.className = 'letter';
+        
+            const title = document.createElement('div');
+            title.className = 'letter-title';
+            title.textContent = `${letter}`;
+        
+            const wordList = document.createElement('div');
+            wordList.className = 'word-list';
+        
+            words.forEach(word => {
+                const span = document.createElement('span');
+                span.textContent = word;
+                span.onclick = () => {
+                    targetWord = word;
+                    wordDiv.textContent = word;
+                    resultDiv.textContent = "";
+                };
+                wordList.appendChild(span);
+            });
+        
+            section.appendChild(title);
+            section.appendChild(wordList);
+            container.appendChild(section);
+        }
+        
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        
+        function startListening() {
+            if (!targetWord) {
+                alert("Please select a word first.");
+                return;
+            }
+            resultDiv.textContent = "Listening...";
+            recognition.start();
+        }
+        
+        recognition.onresult = function(event) {
+            let spokenText = event.results[0][0].transcript.toLowerCase().trim();
+            const wordsSpoken = [...new Set(spokenText.split(/\s+/))].join(' ');
+        
+            if (wordsSpoken.includes(targetWord.toLowerCase())) {
+                resultDiv.textContent = `✅ Correct! You said: "${targetWord}"`;
+            } else {
+                const fuse = new Fuse([targetWord], {
+                    includeScore: true,
+                    threshold: 0.4
+                });
+        
+                const result = fuse.search(wordsSpoken);
+                if (result.length > 0) {
+                    resultDiv.textContent = `✅ Close enough! You said: "${targetWord}"`;
+                } else {
+                    resultDiv.textContent = `❌ Incorrect. You said: "${spokenText}"`;
+                }
+            }
+        };
+        
+        recognition.onerror = function(event) {
+            resultDiv.textContent = "Error: " + event.error;
+        };
+        
+        function stopListening() {
+            recognition.stop();
+            resultDiv.textContent = "⛔ Listening stopped.";
+        }
+    </script>
+    
+
+</body>
+</html>

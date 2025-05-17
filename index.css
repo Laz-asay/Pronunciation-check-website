@@ -1,0 +1,113 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+.constant {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    padding: 15px;
+    z-index: 1000;
+    border-bottom: 1px solid #ccc;
+}
+
+#word {
+    font-size: 2em;
+    margin: 20px 0;
+    color: #007BFF;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+#result {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.letter-section {
+    text-align: left;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.letter-title {
+    font-size: 1.3em;
+    margin-top: 20px;
+    color: #444;
+    font-weight: bold;
+}
+
+.word-list {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.word-list span {
+    display: inline-block;
+    background: #f1f1f1;
+    margin: 5px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.word-list span:hover {
+    background: #d0ebff;
+}
+
+/* Responsive Styling for Mobile Devices */
+@media (max-width: 768px) {
+    body {
+        margin: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .constant {
+        padding: 10px;
+    }
+
+    #word {
+        font-size: 1.5em;
+    }
+
+    button {
+        width: 100%;
+        font-size: 1em;
+        margin: 10px 0;
+    }
+
+    .letter-section {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+    .letter-title {
+        font-size: 1.1em;
+    }
+
+    .word-list span {
+        font-size: 0.9em;
+        padding: 6px 10px;
+        margin: 4px;
+    }
+
+    #result {
+        font-size: 1em;
+    }
+}
